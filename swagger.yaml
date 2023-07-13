@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: Bank Argent API documentation
+  title: Bank Argent API Documentation
   description: Contains all available API endpoints in this codebase
   version: '1.0.0'
   termsOfService: 'http://swagger.io/terms/'
@@ -8,6 +8,7 @@ host: localhost:3001
 basePath: /api/v1
 schemes:
   - http
+
 paths:
   /user/login:
     post:
@@ -110,6 +111,160 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+
+
+  /user/profile/transactions:
+    post:
+      tags:
+        - Transactions Module
+      summary: Create Transaction
+      description: API for creating a new transaction
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - in: body
+          name: body
+          description: Transaction Payload
+          required: true
+          schema:
+            $ref: '#/definitions/NewTransactionSchema'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/TransactionSchema'
+      responses:
+        '201':
+          description: Success - Transaction created successfully
+          schema:
+            $ref: '#/definitions/ApiResponseTransaction'
+        '400':
+          description: Bad Request - Invalid payload
+        '401':
+          description: Bad Request - Unauthorized
+        '500':
+          description: Internal Server Error
+    get:
+      tags:
+        - Transactions Module
+      summary: All Transactions
+      description: API for getting all transactions
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success - Returns all transactions
+          schema:
+            $ref: '#/definitions/GetAllTransactions'
+        '400':
+          description: Bad Request - Invalid payload
+        '401':
+          description: Bad Request - Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /user/profile/transactions/{id}:
+    get:
+      tags:
+        - Transactions Module
+      summary: Single Transaction
+      description: API for getting a single transaction
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - name: id
+          in: path
+          description: Transaction ID
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success - Return the transaction
+          schema:
+            $ref: '#/definitions/TransactionSchema'
+        '400':
+          description: Bad Request - Invalid payload
+        '401':
+          description: Bad Request - Unauthorized
+        '500':
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Transactions Module
+      summary: Delete Transaction
+      description: API for deleting a transaction
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - name: id
+          in: path
+          description: Transaction ID
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Success - Transaction deleted successfully
+          schema:
+            $ref: '#/definitions/ApiResponseTransactionDelete'
+        '400':
+          description: Bad Request - Invalid payload
+        '401':
+          description: Bad Request - Unauthorized
+        '500':
+          description: Internal Server Error
+
+    put:
+      tags:
+        - Transactions Module
+      summary: Update Transaction
+      description: API for updating a transaction
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - name: id
+          in: path
+          description: Transaction ID
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Update Transaction Payload
+          required: true
+          schema:
+            $ref: '#/definitions/NewTransactionSchema'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success - Transaction updated successfully
+          schema:
+            $ref: '#/definitions/ApiResponseTransaction'
+        '400':
+          description: Bad Request - Invalid payload
+        '401':
+          description: Bad Request - Unauthorized
+        '500':
+          description: Internal Server Error
+
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -164,3 +319,64 @@ definitions:
         type: string
       lastName:
         type: string
+  TransactionSchema:
+    type: object
+    properties:
+      id:
+        type: string
+      sendTo:
+        type: string
+      date: 
+        type: string
+        format: date
+      quantity:
+        type: number
+      description:
+        type: string
+  NewTransactionSchema:
+    type: object
+    properties:
+      sendTo:
+        type: string
+      date: 
+        type: string
+        format: date
+      quantity:
+        type: number
+      description:
+        type: string
+  ApiResponseTransaction:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object
+        properties:
+          id:
+            type: string
+          sendTo:
+            type: string
+          message:
+            type: string
+  ApiResponseTransactionDelete:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object
+        properties:
+          message:
+            type: string
+  GetAllTransactions:
+    type: object
+    properties:
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/TransactionSchema'
