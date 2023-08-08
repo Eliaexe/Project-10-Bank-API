@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: Bank Argent API Documentation
+  title: Bank Argent API documentation
   description: Contains all available API endpoints in this codebase
   version: '1.0.0'
   termsOfService: 'http://swagger.io/terms/'
@@ -8,7 +8,6 @@ host: localhost:3001
 basePath: /api/v1
 schemes:
   - http
-
 paths:
   /user/login:
     post:
@@ -71,12 +70,12 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
-          type: string  
+          type: string
       produces:
         - application/json
       responses:
         '200':
-          description: User profile retrieved successfully
+          description: User profile retrieved successully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
@@ -88,14 +87,14 @@ paths:
         - Bearer: []
       tags:
         - User Module
-      summary: Update User Profile
+      summary: User Profile API
       description: API for updating a user profile
       parameters:
         - in: header
           name: Authorization
           description: Attach Bearer JWT token
           required: true
-          type: string  
+          type: string
         - in: body
           name: body
           description: Update user profile attributes
@@ -106,7 +105,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: User profile updated successfully
+          description: User profile retrieved successully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
